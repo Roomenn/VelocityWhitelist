@@ -40,7 +40,7 @@ public class CommandHandler {
             source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&c" + velocityWhitelist.PREFIX + "Whitelist is already turned on"));
         } else {
             Configs.getConfig().setEnabled(true);
-            Configs.saveConfig(velocityWhitelist);
+            Configs.saveConfig();
             source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&a" + velocityWhitelist.PREFIX + "Whitelist turned &2&lON"));
         }
         return 1;
@@ -57,7 +57,7 @@ public class CommandHandler {
             source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&c" + velocityWhitelist.PREFIX + "Whitelist is already turned off"));
         } else {
             Configs.getConfig().setEnabled(false);
-            Configs.saveConfig(velocityWhitelist);
+            Configs.saveConfig();
             source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&a" + velocityWhitelist.PREFIX + "Whitelist turned &c&lOFF"));
         }
         return 1;

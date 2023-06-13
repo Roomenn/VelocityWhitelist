@@ -24,7 +24,17 @@ public class WhitelistHelper {
      * @return If player is whitelisted or has bypass
      */
     public static boolean check(Player player) {
-        return player.hasPermission("vwhitelist.bypass") ? true : Configs.getWhitelist().contains(player.getUniqueId());
+        if (player.hasPermission("vwhitelist.bypass")) {
+            return true;
+        }
+        if (Configs.whitelistContains(player.getUniqueId())) {
+            return true;
+        }
+        if (Configs.hasBeenUpdated()) {
+            return Configs.whitelistContains(player.getUniqueId());
+        }
+
+        return false;
     }
 
     /**
@@ -36,11 +46,11 @@ public class WhitelistHelper {
             UUID uuid = new MinecraftApi(velocityWhitelist).getUUID(username);
             if(uuid == null) {
                 source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&c" + velocityWhitelist.PREFIX + username + " is not a valid username"));
-            } else if(Configs.getWhitelist().contains(uuid)) {
+            } else if(Configs.whitelistContains(uuid)) {
                 source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&a" + velocityWhitelist.PREFIX + username + " is already in the whitelist"));
             } else {
-                Configs.getWhitelist().add(uuid);
-                Configs.saveWhitelist(velocityWhitelist);
+                Configs.getWhitelist().put(uuid, username);
+                Configs.saveWhitelist();
                 source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&a" + velocityWhitelist.PREFIX + username + " has been added to the whitelist"));
             }
         }).schedule();
@@ -55,11 +65,11 @@ public class WhitelistHelper {
             UUID uuid = new MinecraftApi(velocityWhitelist).getUUID(username);
             if(uuid == null) {
                 source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&c" + velocityWhitelist.PREFIX + username + " is not a valid username"));
-            } else if(!Configs.getWhitelist().contains(uuid)) {
+            } else if(!Configs.whitelistContains(uuid)) {
                 source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&a" + velocityWhitelist.PREFIX + username + " is not in the whitelist"));
             } else {
                 Configs.getWhitelist().remove(uuid);
-                Configs.saveWhitelist(velocityWhitelist);
+                Configs.saveWhitelist();
                 source.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize("&a" + velocityWhitelist.PREFIX + username + " has been removed from the whitelist"));
             }
         }).schedule();
